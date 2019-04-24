@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
 
 class CalculatorButton extends React.PureComponent {
+
+  handleClick = () => {
+    this.props.onClick(this.props.symbol);
+  }
+
   render() {
     return (
-      <div className={`c-calc__btn ${this.props.extraClass}`} >{this.props.symbol}</div>
+      <div  className={`c-calc__btn ${this.props.extraClass}`}
+            onClick={this.handleClick} >
+        {this.props.symbol}
+      </div>
     )
   }
 }
@@ -22,12 +30,6 @@ class CalculatorFunctions extends Component {
     }
   }
 
-  renderCalcButton(symbol) {
-    return (
-      <CalculatorButton symbol={symbol} />
-    );
-  }
-
   render() {
     const btns = this.state.rows.map( (value, index) => {
       let btnClass = '';
@@ -35,7 +37,10 @@ class CalculatorFunctions extends Component {
       else if ( typeof value !== 'number' && value !== '.' ) { btnClass = 'btn--op' }
       
       return (
-        <CalculatorButton key={index} symbol={value} extraClass={btnClass} />
+        <CalculatorButton key={index} 
+                          symbol={value} 
+                          extraClass={btnClass}
+                          onClick={this.props.passClick}/>
       )
     });
 
@@ -69,15 +74,26 @@ class Calculator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      currExp: ''
     }
+  }
+
+  mutateCurrExp(value) {
+    this.setState({
+      currExp: this.currExp + value
+    });
+  }
+
+  handleClick = (value) => {
+    console.log(value);
+    console.log(this);
   }
 
   render() {
     return (
       <section className="c-calc">
         <CalculatorOutput />
-        <CalculatorFunctions />
+        <CalculatorFunctions passClick={this.handleClick} />
       </section>
     )
   }

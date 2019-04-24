@@ -21,15 +21,24 @@
       display: flex
       justify-content: center
       align-items: center
-      border: 1px solid red
+      border: 1px solid gray
       font-size: 2em
+      transition: background-color 0.2s
+      &:hover
+        background-color: #ffe0a8
 
       &.btn--op
-        background-color: red
-        color: white
-        border: 1px solid black
+        background-color: #f7f7f7
+        color: black
+        border: 1px solid gray
+        transition: background-color 0.2s
+        &:hover
+          background-color: #ffe0a8
 
       &.btn--equals
-        background-color: skyblue
-        color: white
-        border: none
+        background-color: #def5ff
+        color: black
+        border: 1px solid gray
+        transition: background-color 0.2s
+        &:hover
+          background-color: lightgreen
