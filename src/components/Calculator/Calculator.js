@@ -22,10 +22,10 @@ class CalculatorFunctions extends Component {
     this.state = {
       rows: [
         '(', ')', '%', 'AC',
-        7, 8, 9, '÷',
-        4, 5, 6, '*',
-        1, 2, 3, '-',
-        0, '.', '=', '+'
+        '7', '8', '9', '÷',
+        '4', '5', '6', '*',
+        '1', '2', '3', '-',
+        '0', '.', '=', '+'
       ]
     }
   }
@@ -74,22 +74,33 @@ class Calculator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currExp: ''
+      currExp: ""
     }
   }
 
-  mutateCurrExp(value) {
-    this.setState({
-      currExp: this.currExp + value
-    });
+  _formatToken(token) {
+    return token.match(/[%*-+÷]/) ? " " + token + " " : token
+  }
+  
+  _evaluateToken(token) {
+    const lastChar = this.state.currExp.slice(-1);
+    return token === "." && lastChar.match(/[^0-9]/) ? '' : token;
   }
 
   handleClick = (value) => {
     console.log(value);
-    console.log(this);
+    const token = this._formatToken(value);
+
+
+
+    let newExp = this.state.currExp.concat(token);
+    this.setState({
+      currExp: newExp,
+    });
   }
 
   render() {
+    console.log(this.state.currExp);
     return (
       <section className="c-calc">
         <CalculatorOutput />
