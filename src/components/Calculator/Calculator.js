@@ -79,6 +79,7 @@ class Calculator extends Component {
     }
   }
 
+  //Could be used to identify token.  Maybe use dotCheck in this one
   _formatToken(token) {
     return token.match(/[%*-+÷]/) ? " " + token + " " : token;
   }
@@ -86,27 +87,40 @@ class Calculator extends Component {
   //No duplicate dot | Need to account for extra periods in number and operator
   //Might be better to go back and wait for equals before checking for dupes
   _dotCheck(token) {
-    let lastToken = this.state.currExp[this.state.currExp.length - 1];
+    const lastToken = this.state.currExp[this.state.currExp.length - 1] || '';
 
-    return token === "." && lastToken.match(/[^0-9]/) && lastToken.match(/[.]/) ? '' : token;
+    return token === "."  && lastToken.match(/[^0-9]/) 
+                          && lastToken.match(/[.]/) ? '' : token;
   }
 
   _evaluate() {
-    //console.log( math.eval(expr) );
-
-    // const expr = (this.state.currExp.split(" ")).reduce( (acc, value, index) => {
-      
-    //     value.includes(".") ? 
-      
-    //   return acc + value
-    // });
-    //console.log(expr);
-
+    const expr = this.state.currExp.join('');
+    let result; 
+    try {
+      result = math.eval(expr);
+    }
+    catch (err) {
+      console.log('Error: ', err);
+      return;
+    }
+    finally {
+      this.setState({
+        currExp: []
+      });
+    }
+    console.log('Success', result);
+    
   }
 
   handleClick = (value) => {
     console.log(value);
+    if (value === '=') { this._evaluate(); return; }
     const token = this._dotCheck( this._formatToken(value) );
+    const operatorFlag = token.match(/[0-9.]/);
+
+    this.setState({
+      currExp: newExp,
+    });
     //Use dot check to check current token for duplicate dots
     //Move ahead if token is done with number with operator or parenthesis
   }
