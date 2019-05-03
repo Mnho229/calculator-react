@@ -64,7 +64,9 @@ class CalculatorOutput extends Component {
   render() {
     return (
       <div className="c-calc__display">
-        <span className="c-calc__output">3+2=1</span>
+        <span className="c-calc__output">
+          {this.props.result || this.props.display.join('')}
+        </span>
       </div>
     )
   }
@@ -75,7 +77,8 @@ class Calculator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currExp: []
+      currExp: [],
+      result: 0
     }
   }
 
@@ -101,35 +104,54 @@ class Calculator extends Component {
     }
     catch (err) {
       console.log('Error: ', err);
+      result = 0;
       return;
     }
     finally {
       this.setState({
-        currExp: []
+        currExp: [],
+        result: result
       });
     }
-    console.log('Success', result);
     
   }
 
   handleClick = (value) => {
     console.log(value);
     if (value === '=') { this._evaluate(); return; }
-    const token = this._dotCheck( this._formatToken(value) );
-    const operatorFlag = token.match(/[0-9.]/);
+    const token = this._dotCheck( this._formatToken(value) ),
+          lastToken = this.state.currExp.length === 0 ? ''
+                    : this.state.currExp.slice(-1)[0];
 
-    this.setState({
-      currExp: newExp,
-    });
-    //Use dot check to check current token for duplicate dots
-    //Move ahead if token is done with number with operator or parenthesis
+    console.log("LastToken: ", lastToken);
+
+    const tokenIsNum = token.match(/[0-9.]/),
+          LTokenIsOp = lastToken.match(/[%*-+÷]/);
+
+    if ( tokenIsNum && !LTokenIsOp ) {
+      const oldArray = this.state.currExp.slice(0, -1);
+      const newExp = [...oldArray, lastToken + token];
+
+      this.setState({
+        currExp: newExp,
+      });
+
+    } else {
+      const newExp = [...this.state.currExp, token];
+
+      this.setState({
+        currExp: newExp,
+      });
+
+    }
+
   }
 
   render() {
     console.log(this.state.currExp);
     return (
       <section className="c-calc">
-        <CalculatorOutput />
+        <CalculatorOutput display={this.state.currExp} result={this.state.result} />
         <CalculatorFunctions passClick={this.handleClick} />
       </section>
     )
