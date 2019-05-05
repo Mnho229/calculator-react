@@ -105,6 +105,7 @@ class Calculator extends Component {
     catch (err) {
       console.log('Error: ', err);
       result = 0;
+      this.props.handleError(true);
       return;
     }
     finally {
@@ -123,7 +124,7 @@ class Calculator extends Component {
           lastToken = this.state.currExp.length === 0 ? ''
                     : this.state.currExp.slice(-1)[0];
 
-    console.log("LastToken: ", lastToken);
+    if (token === '') {return;}
 
     const tokenIsNum = token.match(/[0-9.]/),
           LTokenIsOp = lastToken.match(/[%*-+÷]/);
@@ -134,16 +135,17 @@ class Calculator extends Component {
 
       this.setState({
         currExp: newExp,
+        result: 0
       });
-
     } else {
       const newExp = [...this.state.currExp, token];
 
       this.setState({
         currExp: newExp,
+        result: 0
       });
-
     }
+    this.props.handleError(false);
 
   }
 
