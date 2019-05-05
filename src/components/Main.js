@@ -20,7 +20,7 @@ class Main extends Component {
     return (
       <div>
         <Calculator handleError={this.setEP} />
-        <p class="main__error">{this.state.errorPresent && "Invalid Expression."}</p>
+        <p className="main__error">{this.state.errorPresent && "Invalid Expression."}</p>
       </div>
     )
   }

@@ -97,7 +97,7 @@ class Calculator extends Component {
   }
 
   _evaluate() {
-    const expr = this.state.currExp.join('');
+    const expr = this.state.currExp.join('').replace(/[÷]/g, '/');
     let result; 
     try {
       result = math.eval(expr);
@@ -118,8 +118,15 @@ class Calculator extends Component {
   }
 
   handleClick = (value) => {
-    console.log(value);
     if (value === '=') { this._evaluate(); return; }
+
+    if (value === 'AC') {
+      this.setState({
+        currExp: [],
+        result: 0
+      });
+      return;
+    }
     const token = this._dotCheck( this._formatToken(value) ),
           lastToken = this.state.currExp.length === 0 ? ''
                     : this.state.currExp.slice(-1)[0];
@@ -150,7 +157,6 @@ class Calculator extends Component {
   }
 
   render() {
-    console.log(this.state.currExp);
     return (
       <section className="c-calc">
         <CalculatorOutput display={this.state.currExp} result={this.state.result} />
